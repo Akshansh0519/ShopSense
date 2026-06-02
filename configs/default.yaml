@@ -1,0 +1,42 @@
+# shopsense/configs/default.yaml
+data:
+  min_user_interactions: 3
+  min_item_interactions: 5
+  split_ratios:
+    train: 0.8
+    val: 0.1
+    test: 0.1
+  time_decay_rate: 0.01
+
+models:
+  als:
+    factors: 64
+    regularization: 0.1
+    iterations: 30
+    alpha: 20
+  bpr:
+    factors: 64
+    regularization: 0.01
+    iterations: 100
+  content:
+    embedding_model: "all-MiniLM-L6-v2"
+  hybrid:
+    weights:
+      cf: 0.55
+      content: 0.30
+      popularity: 0.10
+      freshness: 0.05
+  mmr:
+    lambda_param: 0.75
+    candidate_pool_size: 100
+    final_k: 10
+
+serving:
+  redis_ttl_seconds: 86400
+  default_category: "Global"
+
+evaluation:
+  # Local CPU defaults. Use --full in scripts for final Colab-grade metrics.
+  max_validation_users: 1000
+  max_test_users: 5000
+  max_segment_users: 1500
