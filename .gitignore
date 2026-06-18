@@ -53,6 +53,8 @@ cover/
 
 # Environments
 .env
+# Keep .env.example tracked so others know what vars are needed
+# !.env.example
 .venv
 env/
 venv/
