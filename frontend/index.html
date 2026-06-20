@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShopSense — Hybrid Recommendation Engine</title>
+  <meta name="description" content="A production-style hybrid ML recommendation engine combining ALS, BPR, NLP content embeddings, and MMR reranking." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Albert+Sans:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ░░ NAV ░░ -->
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#">
+        <span class="logo-icon">◈</span>
+        ShopSense
+      </a>
+      <nav class="nav-links">
+        <a href="#architecture">Architecture</a>
+        <a href="#demo">Live Demo</a>
+        <a href="#metrics">Metrics</a>
+        <a href="#stack">Stack</a>
+      </nav>
+      <a class="nav-cta" href="http://localhost:8000/docs" target="_blank">API Docs ↗</a>
+    </div>
+  </header>
+
+  <!-- ░░ HERO ░░ -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        API Online — <em>development mode</em>
+      </div>
+      <h1 class="hero-title">
+        Hybrid Recommendation<br />
+        <span class="accent-text">Intelligence</span>
+      </h1>
+      <p class="hero-subtitle">
+        ALS · BPR · NLP Embeddings · MMR Reranking · Redis Caching
+      </p>
+      <div class="hero-actions">
+        <a href="#demo" class="btn-primary">Try the Demo</a>
+        <a href="https://github.com/Akshansh0519/ShopSense" target="_blank" class="btn-ghost">View on GitHub ↗</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="arch-diagram" id="archDiagram">
+        <div class="arch-node node-user">User</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node node-api">FastAPI</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node node-hybrid">Hybrid<br/>Model</div>
+        <div class="arch-branches">
+          <div class="arch-branch">
+            <div class="arch-node node-als">ALS</div>
+          </div>
+          <div class="arch-branch">
+            <div class="arch-node node-bpr">BPR</div>
+          </div>
+          <div class="arch-branch">
+            <div class="arch-node node-nlp">NLP</div>
+          </div>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node node-mmr">MMR<br/>Rerank</div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-node node-result">Results</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ STAT BAR ░░ -->
+  <section class="stat-bar">
+    <div class="stat-item">
+      <span class="stat-number" data-target="3">0</span>
+      <span class="stat-label">ML Models Fused</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="50" data-suffix="ms">0</span>
+      <span class="stat-label">Sub-50ms Latency</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="24" data-suffix="h">0</span>
+      <span class="stat-label">Redis Cache TTL</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-number" data-target="100" data-suffix="%">0</span>
+      <span class="stat-label">Cold-Start Coverage</span>
+    </div>
+  </section>
+
+  <!-- ░░ ARCHITECTURE ░░ -->
+  <section class="section" id="architecture">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">System Design</div>
+        <h2>How It Works</h2>
+        <p>A decoupled MLOps pipeline that trains offline and serves in real-time through a secured FastAPI microservice.</p>
+      </div>
+      <div class="pipeline-cards">
+        <div class="pipeline-card">
+          <div class="pipeline-num">01</div>
+          <div class="pipeline-icon">⬡</div>
+          <h3>Data Layer</h3>
+          <p>H&amp;M transaction logs are loaded via Pandas, encoded into sparse CSR interaction matrices, and split temporally to prevent data leakage.</p>
+          <div class="pipeline-tags">
+            <span>Pandas</span><span>SciPy CSR</span><span>Temporal Split</span>
+          </div>
+        </div>
+        <div class="pipeline-connector">—</div>
+        <div class="pipeline-card">
+          <div class="pipeline-num">02</div>
+          <div class="pipeline-icon">◈</div>
+          <h3>Model Training</h3>
+          <p>Three parallel learners — ALS (matrix factorization), BPR (pairwise ranking), and Sentence-Transformer NLP embeddings — are trained and checkpointed via MLflow.</p>
+          <div class="pipeline-tags">
+            <span>ALS</span><span>BPR</span><span>NLP</span><span>MLflow</span>
+          </div>
+        </div>
+        <div class="pipeline-connector">—</div>
+        <div class="pipeline-card">
+          <div class="pipeline-num">03</div>
+          <div class="pipeline-icon">◇</div>
+          <h3>Hybrid Fusion</h3>
+          <p>Scores from all models are normalized and fused with configurable weights. MMR reranking then diversifies the final list to reduce visual redundancy.</p>
+          <div class="pipeline-tags">
+            <span>Score Fusion</span><span>MMR</span><span>Diversity</span>
+          </div>
+        </div>
+        <div class="pipeline-connector">—</div>
+        <div class="pipeline-card">
+          <div class="pipeline-num">04</div>
+          <div class="pipeline-icon">△</div>
+          <h3>API Serving</h3>
+          <p>FastAPI with API key auth, rate limiting, CORS protection, and Redis cache serves ranked recommendations at sub-50ms with cold-start fallback.</p>
+          <div class="pipeline-tags">
+            <span>FastAPI</span><span>Redis</span><span>Auth</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ LIVE DEMO ░░ -->
+  <section class="section section-dark" id="demo">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Interactive Demo</div>
+        <h2>Query the Engine</h2>
+        <p>Send a live request to the local API. Try different user IDs to see personalization vs cold-start behaviour.</p>
+      </div>
+      <div class="demo-container">
+        <div class="demo-left">
+          <div class="input-group">
+            <label>User ID</label>
+            <div class="input-row">
+              <input type="text" id="userIdInput" placeholder="e.g. 12345" value="" />
+              <button class="random-btn" id="randomBtn" title="Random User">⟳</button>
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Top-K Results</label>
+            <div class="slider-row">
+              <input type="range" id="kSlider" min="1" max="20" value="5" />
+              <span class="slider-value" id="kValue">5</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Category Filter <span class="optional">(optional)</span></label>
+            <select id="categorySelect">
+              <option value="">All Categories</option>
+              <option value="Outerwear">Outerwear</option>
+              <option value="Tops">Tops</option>
+              <option value="Shoes">Shoes</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>API Key</label>
+            <input type="password" id="apiKeyInput" placeholder="X-API-Key (leave blank if dev mode)" />
+          </div>
+          <button class="btn-primary btn-full" id="fetchBtn">
+            <span id="fetchBtnText">Get Recommendations</span>
+            <span class="btn-spinner hidden" id="btnSpinner">⟳</span>
+          </button>
+
+          <div class="request-preview">
+            <div class="preview-label">Request Preview</div>
+            <code id="requestPreview">GET /recommendations/— ?k=5</code>
+          </div>
+        </div>
+
+        <div class="demo-right">
+          <div class="response-header">
+            <span>Response</span>
+            <div class="response-meta" id="responseMeta"></div>
+          </div>
+          <div class="results-list" id="resultsList">
+            <div class="results-placeholder">
+              <div class="placeholder-icon">◈</div>
+              <p>Results will appear here</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ METRICS ░░ -->
+  <section class="section" id="metrics">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Offline Evaluation</div>
+        <h2>Model Benchmarks</h2>
+        <p>Offline A/B simulation across user activity segments. Higher NDCG@10 = better ranking quality.</p>
+      </div>
+
+      <div class="metrics-status" id="metricsStatus">
+        <div class="metrics-loading">
+          <div class="spinner"></div>
+          <span>Loading metrics from API...</span>
+        </div>
+      </div>
+
+      <div class="metrics-table-wrap hidden" id="metricsTableWrap">
+        <div class="model-tabs" id="modelTabs"></div>
+        <div class="metrics-grid" id="metricsGrid"></div>
+      </div>
+
+      <div class="metrics-note">
+        <span class="note-icon">ℹ</span>
+        Metrics are computed offline. Run <code>python scripts/evaluate_all.py</code> to refresh.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ░░ TECH STACK ░░ -->
+  <section class="section section-dark" id="stack">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-tag">Technology</div>
+        <h2>Built With</h2>
+      </div>
+      <div class="stack-grid">
+        <div class="stack-card">
+          <div class="stack-icon">🐍</div>
+          <h4>Python 3.11</h4>
+          <p>Core language for all ML and API code</p>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">⚡</div>
+          <h4>FastAPI</h4>
+          <p>Async REST API with Pydantic validation</p>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">🧠</div>
+          <h4>implicit</h4>
+          <p>GPU-accelerated ALS &amp; BPR training</p>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">🔤</div>
+          <h4>Sentence-Transformers</h4>
+          <p>all-MiniLM-L6-v2 for NLP embeddings</p>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">🗃️</div>
+          <h4>Redis</h4>
+          <p>24h recommendation cache with sorted sets</p>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">📊</div>
+          <h4>MLflow</h4>
+          <p>Experiment tracking &amp; model registry</p>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">🐳</div>
+          <h4>Docker</h4>
+          <p>Containerized, non-root deployment</p>
+        </div>
+        <div class="stack-card">
+          <div class="stack-icon">🔒</div>
+          <h4>SlowAPI</h4>
+          <p>Rate limiting &amp; API key authentication</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ FOOTER ░░ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="logo-icon">◈</span> ShopSense
+      </div>
+      <p class="footer-sub">Hybrid Recommendation Engine · Built by Akshansh Ranjan</p>
+      <div class="footer-links">
+        <a href="https://github.com/Akshansh0519/ShopSense" target="_blank">GitHub</a>
+        <span>·</span>
+        <a href="http://localhost:8000/docs" target="_blank">API Docs</a>
+        <span>·</span>
+        <a href="http://localhost:8000/health" target="_blank">Health Check</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
