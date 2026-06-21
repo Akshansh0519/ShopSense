@@ -241,7 +241,31 @@ ShopSense/
 
 ---
 
-## Setup & Installation
+## Live Deployment & Architecture
+
+**🔗 Live Demo:** [https://shopsense-frontend.vercel.app](https://shopsense-frontend.vercel.app)
+
+> **⚠️ Cold Start Warning:** The FastAPI backend is deployed on a **Render Free Tier** instance. Render spins down free web services that go 15 minutes without receiving inbound traffic. **Your first request may take 50–60 seconds** to complete as the container boots up and loads the models into memory. Subsequent requests will be served in <50ms.
+
+### Deployment Challenges & Engineering Solutions
+
+Deploying a multi-model ML system to free-tier cloud providers presented several strict engineering constraints. Here is how they were solved:
+
+1. **Strict CORS Security Spec Conflict**
+   - **Problem:** The Vercel frontend requires cross-origin access to the Render backend, but the API Key header requires `allow_credentials=True`. The W3C CORS specification strictly forbids `allow_credentials=True` when `allow_origins=["*"]`, causing browsers to silently block responses.
+   - **Solution:** Implemented dynamic CORS middleware that auto-detects wildcard origins and disables credentials, while enabling credentials for specific origin allowlists (like the production Vercel domain), ensuring both local dev flexibility and production security.
+
+2. **Resilient Caching Strategy (Redis vs Free-Tier Quirks)**
+   - **Problem:** Managed external Redis instances often use `rediss://` (secure TLS) which can fail strict certificate validation on free tiers. Additionally, network drops between Render and external Redis providers caused silent caching failures.
+   - **Solution:** Built a custom `RedisCache` wrapper that gracefully ignores strict SSL requirements for `rediss://` URIs, forces a connection `ping()` on startup to fail-fast, and implements a seamless **in-memory dictionary fallback** when Redis is completely unreachable. This guarantees the API never drops a request due to cache infrastructure failure.
+
+3. **Data Serialization over the Wire**
+   - **Problem:** The recommendation engine generates similarity scores using NumPy `float32`, which the standard Python `json` module cannot serialize when attempting to cache to Redis.
+   - **Solution:** Ensured the ML pipeline normalizes and explicitly casts all NumPy types to native Python types before they reach the serving layer or cache, ensuring seamless JSON serialization and Pydantic validation across the stack.
+
+---
+
+## Setup & Installation If you want to test it locally on your own machine.
 
 ### Prerequisites
 
@@ -545,8 +569,6 @@ The Dockerfile uses `python:3.11-slim`, creates a non-root user, and runs `uvico
 - **Simulated A/B testing.** The A/B simulator uses deterministic hash-based assignment on historical data.
 - **Local serving.** The FastAPI server is designed for local or Docker deployment, not cloud-scale.
 - **Drift monitoring is a prototype.** The Evidently-based drift module generates offline reports, not real-time alerts.
-- **No GPU required.** NLP embeddings can be pre-computed on Colab; all other training runs on CPU.
-
 ---
 
 ## Some Good Articles to read and understand
