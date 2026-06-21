@@ -87,14 +87,15 @@ Thumbs.db
 # Do not commit raw data, processed data, or large model artifacts
 data/raw/*
 !data/raw/.gitkeep
+!data/raw/articles.csv
 data/processed/*
 !data/processed/.gitkeep
 
-artifacts/*
-!artifacts/.gitkeep
+# artifacts/*
+# !artifacts/.gitkeep
 
-reports/*
-!reports/.gitkeep
+# reports/*
+# !reports/.gitkeep
 
 # MLflow tracking
 mlruns/

@@ -1,0 +1,38 @@
+{
+  "trained_at": "2026-06-21T08:32:13.745007+00:00",
+  "active_model": "hybrid_mmr",
+  "model_version": "hybrid_mmr_v1",
+  "best_cf_model": "bpr",
+  "dataset": "h_and_m_personalized_fashion",
+  "num_users": 997,
+  "num_items": 327,
+  "artifacts": {
+    "models_dir": "artifacts/models",
+    "item_embeddings": "artifacts/item_embeddings.npy",
+    "train_split": "data/processed/train.pkl",
+    "val_split": "data/processed/val.pkl",
+    "test_split": "data/processed/test.pkl"
+  },
+  "validation": {
+    "als": {
+      "recall@10": 0.040349417637271213,
+      "precision@10": 0.005990016638935111,
+      "ndcg@10": 0.020562314881473417,
+      "map@10": 0.012273855743073712,
+      "coverage@10": 0.9969418960244648,
+      "p50_latency_ms": 0.0,
+      "p95_latency_ms": 1.1360645294189453,
+      "p99_latency_ms": 3.807544708251953
+    },
+    "bpr": {
+      "recall@10": 0.046311702717692735,
+      "precision@10": 0.007321131447587355,
+      "ndcg@10": 0.02252093388717455,
+      "map@10": 0.01231523298910986,
+      "coverage@10": 0.19571865443425077,
+      "p50_latency_ms": 0.0,
+      "p95_latency_ms": 0.6642341613769531,
+      "p99_latency_ms": 3.1287670135498047
+    }
+  }
+}
