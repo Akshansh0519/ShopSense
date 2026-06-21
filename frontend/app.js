@@ -3,7 +3,7 @@
    ═══════════════════════════════════════ */
 
 const API_BASE = 'https://shopsense-pkys.onrender.com';
-const SAMPLE_USER_IDS = ['12345', '67890', '11111', '22222', '99999', '54321', '88888'];
+const SAMPLE_USER_IDS = ['user_00001', 'user_00042', 'user_00100', 'user_00250', 'user_00500', 'user_00777', 'user_00999'];
 
 // ── Nav scroll effect ─────────────────────────────────────────────────────────
 const nav = document.getElementById('nav');

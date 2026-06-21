@@ -34,6 +34,10 @@ IS_PRODUCTION = APP_ENV == "production"
 _raw_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:8501")
 ALLOWED_ORIGINS = [o.strip() for o in _raw_origins.split(",") if o.strip()]
 
+# Per the CORS spec, allow_credentials=True is INCOMPATIBLE with allow_origins=["*"].
+# Browsers will silently block all responses if both are set. Detect and handle this.
+_is_wildcard = ALLOWED_ORIGINS == ["*"]
+
 # ── App Factory ───────────────────────────────────────────────────────────────
 app = FastAPI(
     title="ShopSense Recommendation API",
@@ -51,10 +55,9 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
-    # Restrict to explicit origins — never "*" 
     allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_credentials=not _is_wildcard,  # Must be False when origins is ["*"]
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type", "X-API-Key"],
 )
 
