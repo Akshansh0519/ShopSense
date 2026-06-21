@@ -1,0 +1,86 @@
+**Phase 1 — Foundations**
+
+1. ⭐⭐⭐ Why We Use Sparse Matrices for Recommender Systems
+https://medium.com/data-science/why-we-use-sparse-matrices-for-recommender-systems-2ccc9ab698a4
+
+2. ⭐⭐⭐ ALS Implicit Collaborative Filtering (implicit vs explicit feedback)
+https://medium.com/radon-dev/als-implicit-collaborative-filtering-5ed653ba39fe
+
+3. ⭐⭐ Cold Start Problem in Recommender Systems
+https://medium.com/@kumarkishalaya/cold-start-problem-in-recommender-systems-and-how-to-deal-with-them-ea2ec841440e
+
+---
+
+**Phase 2 — Individual Models**
+
+4. ⭐⭐ Comprehensive Guide on Item-Based Collaborative Filtering
+https://medium.com/data-science/comprehensive-guide-on-item-based-recommendation-systems-d67e40e2b75d
+
+5. ⭐⭐⭐ Prototyping a Recommender System Step by Step Part 2: ALS Matrix Factorization
+https://medium.com/data-science/prototyping-a-recommender-system-step-by-step-part-2-alternating-least-square-als-matrix-4a76c58714a1
+
+6. ⭐⭐⭐ Getting Started with Recommender Systems (implicit library — ALS + BPR in code)
+https://medium.com/swlh/getting-started-with-recommender-systems-5ad8846c280b
+
+7. ⭐⭐⭐ Recommender System — Bayesian Personalized Ranking from Implicit Feedback
+https://medium.com/data-science/recommender-system-bayesian-personalized-ranking-from-implicit-feedback-78684bfcddf6
+
+8. ⭐⭐ Sentence Transformers Semantic Search (official docs)
+https://www.sbert.net/examples/sentence_transformer/applications/semantic-search/README.html
+
+---
+
+**Phase 3 — Combining Models**
+
+9. ⭐⭐⭐ Building a Hybrid Recommendation System: Combining CF, Content-Based, and Matrix Factorization
+https://medium.com/@Emar7/building-a-hybrid-recommendation-system-combining-collaborative-filtering-content-based-and-6be4e400ec3c
+
+10. ⭐⭐⭐ Diversity in Recommendations — Maximal Marginal Relevance (MMR)
+https://medium.com/data-science-collective/diversity-in-recommendations-maximal-marginal-relevance-mmr-0e7840c9399e
+
+---
+
+**Phase 4 — Evaluation**
+
+11. ⭐⭐⭐ Splitting Data for Recommender Evaluation (temporal splits)
+https://apxml.com/courses/building-ml-recommendation-system/chapter-5-evaluating-recommendation-systems/splitting-data-for-evaluation
+
+12. ⭐⭐⭐ Evaluation Metrics for Search and Recommendation Systems (NDCG, MAP, Recall)
+https://weaviate.io/blog/retrieval-evaluation-metrics
+
+---
+
+**Phase 5 — Full Pipeline View**
+
+13. ⭐⭐⭐ One-Stop Guide for Production Recommendation Systems
+https://medium.com/@zaiinn440/one-stop-guide-for-production-recommendation-systems-9491f68d92e3
+
+14. ⭐⭐ Building a Hybrid Recommender System: Balancing Accuracy, Coverage, and Diversity
+https://medium.com/@sanjeeda.jeba/building-a-hybrid-recommender-system-balancing-accuracy-coverage-and-diversity-e306157a4012
+
+---
+
+**Phase 6 — Infrastructure**
+
+15. ⭐⭐ Mastering MLflow: From Experiment Tracking to Production-Ready MLOps
+https://mohamed-stifi.medium.com/mastering-mlflow-the-complete-mlops-workflow-from-experiment-to-production-3b78b8c8abe1
+
+16. ⭐⭐⭐ ML Model Serving with FastAPI and Redis for Faster Predictions
+https://www.analyticsvidhya.com/blog/2025/06/ml-model-serving/
+
+17. ⭐⭐ Redis Design Patterns for Caching and Session Management
+https://medium.com/@artemkhrenov/key-value-store-patterns-redis-design-patterns-for-caching-and-session-management-418d91148701
+
+---
+
+**Phase 7 — Original Papers (optional)**
+
+18. ⭐ Collaborative Filtering for Implicit Feedback Datasets — Hu, Koren, Volinsky
+https://yifanhu.net/PUB/cf.pdf
+
+19. ⭐ BPR: Bayesian Personalized Ranking from Implicit Feedback — Rendle et al.
+https://arxiv.org/abs/1205.2618
+
+---
+
+**Quick guide:** ⭐⭐⭐ = must read (10 articles), ⭐⭐ = read if time allows (7 articles), ⭐ = skip unless you want the math (2 papers). The 10 three-star articles alone give you solid coverage of everything in ShopSense.
