@@ -23,7 +23,8 @@ class RedisCache:
             }
             # Many managed Redis providers (like Render or Upstash) use rediss:// 
             # and may fail strict SSL certificate checks on free tiers.
-            if redis_url.startswith("rediss://"):
+            if redis_url.startswith("rediss://") or ".upstash.io" in redis_url:
+                kwargs["ssl"] = True
                 kwargs["ssl_cert_reqs"] = None
                 
             client = redis.from_url(redis_url, **kwargs)
