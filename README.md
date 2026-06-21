@@ -243,7 +243,7 @@ ShopSense/
 
 ## Live Deployment & Architecture
 
-**🔗 Live Demo:** [https://shopsense-frontend.vercel.app](https://shopsense-frontend.vercel.app)
+**🔗 Live Demo:** [https://shopsense-frontend.vercel.app](https://shop-sense-five.vercel.app/)
 
 > **⚠️ Cold Start Warning:** The FastAPI backend is deployed on a **Render Free Tier** instance. Render spins down free web services that go 15 minutes without receiving inbound traffic. **Your first request may take 50–60 seconds** to complete as the container boots up and loads the models into memory. Subsequent requests will be served in <50ms.
 
