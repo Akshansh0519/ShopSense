@@ -205,7 +205,14 @@ async function loadMetrics() {
       };
     }
 
-    activeModel = modelData?.active_model || Object.keys(allMetrics.metrics)[0];
+    let serverModel = modelData?.active_model;
+    if (serverModel && !allMetrics.metrics[serverModel]) {
+      // Find a key that the server model starts with (e.g., "hybrid_mmr_v1" -> "hybrid_mmr")
+      const match = Object.keys(allMetrics.metrics).find(k => serverModel.startsWith(k));
+      if (match) serverModel = match;
+    }
+    
+    activeModel = serverModel || Object.keys(allMetrics.metrics)[0];
 
     renderTabs();
     renderMetricCards(activeModel);
