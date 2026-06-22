@@ -43,10 +43,10 @@ app = FastAPI(
     title="ShopSense Recommendation API",
     description="Production-style recommendation serving API",
     version="1.0.0",
-    # Disable interactive docs in production to reduce attack surface.
-    docs_url=None if IS_PRODUCTION else "/docs",
-    redoc_url=None if IS_PRODUCTION else "/redoc",
-    openapi_url=None if IS_PRODUCTION else "/openapi.json",
+    # Enable interactive docs in production so recruiters can test the API.
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
 )
 
 # Attach rate limiter state and its default 429 handler
