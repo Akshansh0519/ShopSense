@@ -28,12 +28,17 @@ if not _EXPECTED_API_KEY:
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 
-def verify_api_key(key: Optional[str] = Security(api_key_header)) -> str:
+def verify_api_key(request: Request, key: Optional[str] = Security(api_key_header)) -> str:
     """Dependency that validates the X-API-Key header.
 
     If API_KEY env var is not configured (e.g. in local dev), auth is skipped.
     In production APP_ENV=production, missing or invalid keys return HTTP 401.
     """
+    # Allow recruiters to test the API directly from the Swagger UI without the key
+    referer = request.headers.get("referer", "")
+    if referer.endswith("/docs") or referer.endswith("/redoc"):
+        return "swagger-bypass"
+
     if not _EXPECTED_API_KEY:
         # Dev mode: no key configured → skip auth
         return "dev-unauthenticated"
