@@ -113,7 +113,7 @@ fetchBtn.addEventListener('click', async () => {
 
     renderResults(data.recommendations || []);
   } catch (err) {
-    showError('Could not reach the API. Is the server running on port 8000?');
+    showError('API is unreachable or waking up from sleep. Please wait ~50 seconds and try again.');
   } finally {
     setLoading(false);
   }
@@ -221,7 +221,7 @@ async function loadMetrics() {
 
   } catch (err) {
     metricsStatus.innerHTML = `<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px;">
-      Run <code style="font-family:var(--mono);color:var(--accent-2)">python scripts/evaluate_all.py</code> to generate metrics.
+      API unreachable or waking up from sleep. (If running locally, ensure <code style="font-family:var(--mono);color:var(--accent-2)">python scripts/evaluate_all.py</code> was run).
     </div>`;
   }
 }
