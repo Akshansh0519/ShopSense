@@ -3,7 +3,7 @@ name: Keep Render Alive
 on:
   schedule:
     # Runs every 10 minutes to prevent Render's 15-minute inactivity sleep
-    - cron: '*/10 * * * *'
+    - cron: '0 */10 * * *'
   # Allows you to manually trigger the workflow from the Actions tab
   workflow_dispatch: 
 
@@ -14,4 +14,4 @@ jobs:
       - name: Ping API Health Endpoint
         # Temporarily removing || exit 0 and adding -v for verbose logging
         # so we can see the exact response from Render in the GitHub logs.
-        run: curl -v https://shopsense-pkys.onrender.com/health
+        run: curl -v https://shopsense-api-9z46.onrender.com/health

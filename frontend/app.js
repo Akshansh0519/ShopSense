@@ -2,7 +2,7 @@
    ShopSense Frontend — app.js
    ═══════════════════════════════════════ */
 
-const API_BASE = 'https://shopsense-pkys.onrender.com';
+const API_BASE = 'https://shopsense-api-9z46.onrender.com';
 const SAMPLE_USER_IDS = ['user_00001', 'user_00042', 'user_00100', 'user_00250', 'user_00500', 'user_00777', 'user_00999'];
 
 // ── Nav scroll effect ─────────────────────────────────────────────────────────
