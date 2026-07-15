@@ -296,3 +296,63 @@ metricsObserver.observe(document.getElementById('metrics'));
 
 // ── Initial preview update ────────────────────────────────────────────────────
 updatePreview();
+
+// ── Backend Status Banner ───────────────────────────────────────────────────
+const statusBanner = document.getElementById('backendStatusBanner');
+const statusBannerInner = document.querySelector('.status-banner-inner');
+const statusTitle = document.getElementById('statusTitle');
+const statusDesc = document.getElementById('statusDesc');
+const statusBadge = document.getElementById('statusBadge');
+const statusAttempt = document.getElementById('statusAttempt');
+const statusDismissBtn = document.getElementById('statusDismissBtn');
+
+if (statusBanner) {
+  let attempt = 1;
+  let checkInterval = null;
+  let isDismissed = false;
+
+  // Show banner by default on page load to test Render free tier wake-up
+  statusBanner.classList.remove('hidden');
+
+  statusDismissBtn.addEventListener('click', () => {
+    isDismissed = true;
+    statusBanner.classList.add('hidden');
+    if (checkInterval) clearInterval(checkInterval);
+  });
+
+  const checkHealth = async () => {
+    if (isDismissed) return;
+    try {
+      const res = await fetch(`${API_BASE}/health`, { method: 'GET' });
+      if (res.ok) {
+        // API IS ONLINE!
+        if (checkInterval) clearInterval(checkInterval);
+        statusBannerInner.classList.add('is-online');
+        
+        statusTitle.textContent = 'API is Online!';
+        statusAttempt.style.display = 'none';
+        
+        statusDesc.innerHTML = 'The ShopSense Recommendation API has returned <strong style="color:#34d399">200 OK</strong> and is fully online!<br/>You can now query personalized recommendations and test cold-start fallbacks instantly.';
+        
+        statusBadge.textContent = '🟢 ONLINE (200 OK)';
+        statusBadge.classList.remove('checking');
+        statusBadge.classList.add('online');
+
+        // Transform dismiss button into a primary continue button
+        statusDismissBtn.textContent = 'Got It, Continue to ShopSense ◈';
+        statusDismissBtn.classList.add('status-continue-btn');
+        document.getElementById('statusIntervalTxt').style.display = 'none';
+      } else {
+        throw new Error('Not ok');
+      }
+    } catch (e) {
+      // Still waking up
+      attempt++;
+      statusAttempt.textContent = `Attempt #${attempt}`;
+    }
+  };
+
+  // Immediate first check, then every 3s
+  checkHealth();
+  checkInterval = setInterval(checkHealth, 3000);
+}

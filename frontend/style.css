@@ -833,3 +833,193 @@ input[type="range"] {
   .stat-item { padding: 16px 24px; }
   .stat-divider { display: none; }
 }
+
+/* ── BACKEND STATUS BANNER ── */
+.status-banner {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  width: 100%;
+  max-width: 360px;
+  transition: all 0.5s ease-in-out;
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.status-banner.hidden {
+  display: none;
+}
+@keyframes slideUp {
+  0% { transform: translateY(40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.status-banner-inner {
+  background: rgba(18, 24, 32, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 4px 10px rgba(245, 158, 11, 0.15);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.status-banner-inner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, #f59e0b, #f97316, #fcd34d);
+  animation: pulse-border 2s infinite;
+}
+@keyframes pulse-border {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.status-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.status-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.status-ping {
+  position: relative;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: #f59e0b;
+  border-radius: 50%;
+}
+.status-ping::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fbbf24;
+  border-radius: 50%;
+  animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes ping {
+  75%, 100% { transform: scale(2.5); opacity: 0; }
+}
+.status-title h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fcd34d;
+  font-family: var(--font-mono);
+}
+.status-attempt {
+  font-size: 11px;
+  font-family: var(--font-mono);
+  background: rgba(245, 158, 11, 0.1);
+  color: #fcd34d;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+.status-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+.status-service {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: #d1d5db;
+  margin-bottom: 12px;
+}
+.status-badge {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.status-badge.checking {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  animation: fadePulse 1.5s infinite;
+}
+.status-badge.online {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+@keyframes fadePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.status-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #9ca3af;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 10px;
+}
+.status-footer button {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 10px;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+.status-footer button:hover {
+  color: white;
+}
+/* When Online */
+.status-banner-inner.is-online {
+  background: rgba(16, 25, 21, 0.95);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+.status-banner-inner.is-online::before {
+  background: linear-gradient(90deg, #34d399, #10b981, #059669);
+  animation: none;
+}
+.status-banner-inner.is-online .status-ping {
+  background-color: #10b981;
+}
+.status-banner-inner.is-online .status-ping::after {
+  background-color: #34d399;
+}
+.status-banner-inner.is-online h4 {
+  color: #6ee7b7;
+}
+.status-banner-inner.is-online .status-desc {
+  color: #d1d5db;
+}
+.status-banner-inner.is-online .status-continue-btn {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  padding: 10px;
+  background: linear-gradient(90deg, #059669, #0f766e);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+}

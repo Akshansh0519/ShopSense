@@ -312,6 +312,30 @@
     </div>
   </footer>
 
+  <!-- ░░ BACKEND STATUS BANNER ░░ -->
+  <div id="backendStatusBanner" class="status-banner hidden">
+    <div class="status-banner-inner">
+      <div class="status-header">
+        <div class="status-title">
+          <span class="status-ping" id="statusPing"></span>
+          <h4 id="statusTitle">Render Free Tier Notice</h4>
+        </div>
+        <span class="status-attempt" id="statusAttempt">Attempt #1</span>
+      </div>
+      <p class="status-desc" id="statusDesc">
+        Caution: This API runs on Render Free Tier. If inactive for 15 mins, it sleeps and takes ~50s to warm up. We are waking it up right now...
+      </p>
+      <div class="status-service" id="statusService">
+        <span>ShopSense Recommendation API</span>
+        <span class="status-badge checking" id="statusBadge">⏳ WAKING UP...</span>
+      </div>
+      <div class="status-footer">
+        <span id="statusIntervalTxt">Checking automatically every 3s</span>
+        <button id="statusDismissBtn">Hide Warning</button>
+      </div>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>

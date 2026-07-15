@@ -660,6 +660,97 @@ https://arxiv.org/abs/1205.2618
 
 **Quick guide:** ⭐⭐⭐ = must read (10 articles), ⭐⭐ = read if time allows (7 articles), ⭐ = skip unless you want the math (2 papers). The 10 three-star articles alone give you solid coverage of everything in ShopSense.
 ```
+
+---
+
+## Future Production Upgrade: Scaling to 100k+ Items with FAISS (Vector Database)
+
+> **Architectural Roadmap & LLM Prompt:** This section is designed as a self-contained technical blueprint. If you decide to upgrade ShopSense in the future to serve the **full 1.3 million user / 100,000+ item H&M catalog** on a **Free ($0/mo) 512 MB RAM cloud instance**, feed this exact blueprint to any LLM (or follow it yourself) to execute the migration from memory-heavy `.joblib` matrices to an ultra-fast vector database.
+
+### 1. The Problem Statement & Motivation
+Currently, ShopSense serializes dense and sparse interaction matrices directly into memory (`content.joblib` and `hybrid_mmr.joblib`). While this works flawlessly for a curated catalog of ~1,000 items (using < 150 MB RAM), scaling to **100,000+ products** causes `.joblib` files to balloon to **15+ GB**. Loading 15+ GB into Python memory requires a **$150+/month 32 GB RAM cloud server** (`AWS r6g.xlarge`) and risks Out-Of-Memory (OOM) crashes on startup.
+
+### 2. The Solution: Two-Stage Retrieval via FAISS
+By integrating **FAISS (Facebook AI Similarity Search)**, we decouple vector storage and candidate retrieval from the Python API memory process:
+1. **Stage 1 (Sub-5ms Candidate Retrieval):** Instead of computing cosine similarity across all $N=100,000$ items in Python RAM (`numpy.dot`), FAISS uses optimized C++ SIMD instructions and approximate nearest neighbor (ANN) indexing (`IndexIVFFlat` or `IndexFlatIP`) to retrieve the top $K=100$ candidate items in **`< 5 milliseconds`** while consuming **under 200 MB of RAM**.
+2. **Stage 2 (Lightweight Ranking & MMR):** We pass *only* those 100 candidate items through our `HybridRecommender` and `ReasonGenerator` for final multi-signal scoring and Maximal Marginal Relevance (MMR) diversity adjustment.
+
+---
+
+### 3. Step-by-Step Execution Plan (For LLM / Engineer)
+
+#### Phase 1: Install Dependencies & Build FAISS Index Script
+1. **Install FAISS:** Add `faiss-cpu>=1.7.4` to `requirements.txt`.
+2. **Create Index Builder Script:** Create `scripts/build_faiss_index.py`:
+   ```python
+   import faiss
+   import numpy as np
+   from pathlib import Path
+
+   def build_faiss_index(project_root: Path):
+       # 1. Load the dense item embeddings (e.g. 384-dim SentenceTransformer vectors)
+       embeddings_path = project_root / "artifacts" / "item_embeddings.npy"
+       embeddings = np.load(embeddings_path).astype(np.float32)
+       
+       # 2. L2-Normalize vectors so Inner Product (IP) exactly equals Cosine Similarity
+       faiss.normalize_L2(embeddings)
+       
+       # 3. Create FAISS Inner Product Index
+       dimension = embeddings.shape[1]
+       index = faiss.IndexFlatIP(dimension)
+       
+       # For >100k items, use IVFFlat for 10x faster approximate search:
+       # nlist = int(np.sqrt(embeddings.shape[0]))
+       # quantizer = faiss.IndexFlatIP(dimension)
+       # index = faiss.IndexIVFFlat(quantizer, dimension, nlist, faiss.METRIC_INNER_PRODUCT)
+       # index.train(embeddings)
+       
+       index.add(embeddings)
+       
+       # 4. Save optimized index binary to disk (< 150 MB for 100k items)
+       output_path = project_root / "artifacts" / "item_embeddings.faiss"
+       faiss.write_index(index, str(output_path))
+       print(f"FAISS index successfully written to {output_path} (Total vectors: {index.ntotal})")
+   ```
+
+#### Phase 2: Create Vector Store Service
+Create `recommender/serving/vector_store.py` to wrap FAISS searches cleanly:
+```python
+import faiss
+import numpy as np
+from pathlib import Path
+from typing import List, Tuple
+
+class FaissVectorStore:
+    def __init__(self, index_path: Path):
+        if not index_path.exists():
+            raise FileNotFoundError(f"FAISS index not found at {index_path}")
+        self.index = faiss.read_index(str(index_path))
+        
+    def search(self, query_vector: np.ndarray, k: int = 100) -> List[Tuple[int, float]]:
+        """Searches top-k similar items in < 5ms."""
+        query = query_vector.astype(np.float32).reshape(1, -1)
+        faiss.normalize_L2(query) # Ensure query is normalized for Cosine Similarity
+        
+        scores, indices = self.index.search(query, k)
+        return [(int(idx), float(score)) for idx, score in zip(indices[0], scores[0]) if idx != -1]
+```
+
+#### Phase 3: Refactor `ContentRecommender` to use FAISS
+Modify `recommender/models/content.py`:
+- **Remove** `self.item_embeddings` from being serialized inside `content.joblib`. This instantly shrinks `content.joblib` from **~4 GB down to `< 50 KB`**.
+- In `recommend()`, instead of calculating `self.item_embeddings.dot(query_vec)` across all items, inject `FaissVectorStore` and call:
+  ```python
+  candidates = self.vector_store.search(user_profile_vec, k=fetch_k)
+  ```
+
+#### Phase 4: Verification & Cloud Deployment Check
+1. **Run Unit Tests:** Execute `pytest tests/` to confirm that candidate retrieval precision/recall scores remain identical or within ~0.5% margin.
+2. **Verify Memory Drop:** Run `python -m memory_profiler app/main.py` locally. Total API RAM consumption at boot should drop from **~16 GB down to ~150 MB**.
+3. **Deploy to Render Free Tier:** Commit `item_embeddings.faiss` to GitHub (or fetch via DVC/S3 during build) and deploy seamlessly to a **Free ($0/mo) 512 MB RAM instance**!
+
+---
+
 <p align="center">
   Built with intention by <strong>Akshansh Ranjan</strong>
 </p>
