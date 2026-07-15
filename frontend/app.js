@@ -323,7 +323,7 @@ if (statusBanner) {
   const checkHealth = async () => {
     if (isDismissed) return;
     try {
-      const res = await fetch(`${API_BASE}/health`, { method: 'GET' });
+      const res = await fetch(`${API_BASE}/ready`, { method: 'GET' });
       if (res.ok) {
         // API IS ONLINE!
         if (checkInterval) clearInterval(checkInterval);

@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import List, Tuple, Dict
 from scipy.sparse import csr_matrix
 import logging
-from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from .base import BaseRecommender
 
@@ -14,7 +13,7 @@ class ContentRecommender(BaseRecommender):
     def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
         super().__init__()
         self.model_name = model_name
-        self.encoder = SentenceTransformer(model_name)
+        self.encoder = None
         self.item_embeddings = None
         self.user_profiles = None
         self.train_matrix = None
@@ -72,6 +71,7 @@ class ContentRecommender(BaseRecommender):
             logger.info(f"Loading PRE-COMPUTED embeddings from {embeddings_path}... (Skipping Neural Network training!)")
             self.item_embeddings = np.load(embeddings_path)
         else:
+            from sentence_transformers import SentenceTransformer
             if self.encoder is None:
                 self.encoder = SentenceTransformer(self.model_name)
             logger.info("Preparing text and encoding items...")
